@@ -24,6 +24,7 @@ jobs:
               which biber
               which asy
               which asymptote
+              tlmgr install asymptote
               latexmk -pdf stirling.tex
       - name: Upload artifcat
         uses: actions/upload-artifact@v2
