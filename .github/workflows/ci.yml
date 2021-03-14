@@ -18,7 +18,7 @@ jobs:
         with:
           run: |
               echo hello
-              ls 
+              ls /opt/texlive/texdir/bin/x86_64-linuxmusl/
               which latexmk
               which pdflatex
               which biber
