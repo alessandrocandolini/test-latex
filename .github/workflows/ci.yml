@@ -17,6 +17,9 @@ jobs:
         uses: xu-cheng/texlive-action/full@v1
         with:
           run: |
+              echo hello
+              ls 
+              which latexmk
               which pdflatex
               which biber
               which asy
