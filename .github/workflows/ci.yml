@@ -16,9 +16,9 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: starling.tex
+          root_file: stirling.tex
       - name: Upload artifcat
         uses: actions/upload-artifact@v2
         with:
           name: PDF
-          path: starling.pdf
+          path: stirling.pdf
