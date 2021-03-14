@@ -17,6 +17,10 @@ jobs:
         uses: xu-cheng/texlive-action/full@v1
         with:
           run: |
+              which pdflatex
+              which biber
+              which asy
+              which asymptote
               latexmk -pdf stirling.tex
       - name: Upload artifcat
         uses: actions/upload-artifact@v2
