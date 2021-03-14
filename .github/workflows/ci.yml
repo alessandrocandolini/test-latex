@@ -21,7 +21,6 @@ jobs:
               tlmgr install asymptote
               echo hello2
               which asymptote
-              
               latexmk -pdf stirling.tex
       - name: Upload artifcat
         uses: actions/upload-artifact@v2
