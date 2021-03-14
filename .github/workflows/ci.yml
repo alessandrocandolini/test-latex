@@ -18,13 +18,10 @@ jobs:
         with:
           run: |
               echo hello
-              ls /opt/texlive/texdir/bin/x86_64-linuxmusl/
-              which latexmk
-              which pdflatex
-              which biber
-              which asy
-              which asymptote
               tlmgr install asymptote
+              echo hello2
+              which asymptote
+              
               latexmk -pdf stirling.tex
       - name: Upload artifcat
         uses: actions/upload-artifact@v2
