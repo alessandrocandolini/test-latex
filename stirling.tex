@@ -1,0 +1,883 @@
+\documentclass[onecolumn,a4paper,11pt]{article}
+\usepackage{jheppub}
+\makeatletter
+\def\@fpheader{\today}
+\makeatother
+\pdfoutput=1
+
+
+
+% *****************************************************************************
+%  Main packages
+% *****************************************************************************
+
+
+\usepackage[english]{babel}       % Attiva supporto per la lingua.
+\usepackage[babel]{csquotes}              % Consigliato se si usa biblatex.
+
+\usepackage{graphicx}                     % Per le immagini.
+
+%\usepackage{mparhack}                     % Get marginpar right.
+%\usepackage{fixltx2e}                     % Fixes some LaTeX stuff.
+
+%        	\usepackage[opticals,mathlf,onlytext]{MinionPro}%
+\usepackage[final]{microtype}             % Microgiustificazione e finezze.
+
+\usepackage{ifpdf}                        % To check if pdflatex is used.
+
+\ifpdf
+  \DeclareGraphicsRule{*}{mps}{*}{}       % To include metapost files.
+\fi
+
+\usepackage{subfig}                       % Multiple figures.
+\usepackage{url}                          % Url.
+
+\usepackage{feynmp}                       % Feynman diagrams via metapost
+
+% *****************************************************************************
+% BIBLaTeX
+% *****************************************************************************
+\usepackage[%
+%style=philosophy-modern,%
+%style=philosophy-classic,%
+style=philosophy-verbose,%
+scauthorsbib,%
+%refsection=section,%
+hyperref,backref,%
+backend=biber,%
+firstinits=true,%
+%square,%
+ibidtracker=true]{biblatex}
+
+\addbibresource{bibliography.bib}            % database di biblatex 
+
+% *****************************************************************************
+% Quoting 
+% *****************************************************************************
+
+\usepackage[font=small, noorphanfirst,
+indentfirst=false,
+%begintext=\openautoquote,
+%endtext=\closeautoquote,
+]{quoting}         
+
+
+\input{my-impostazioni-paper}          % Un file personale:
+					  % permette di mantenere ordinato il
+					  % sorgente
+
+					  \newcommand{\asympt}{\sim}
+%					  \newcommand{\BigO}[1]{\ensuremath{\operatorname{O}\bigl(#1\bigr)}}
+					  \newcommand{\bigO}{\ensuremath{\operatorname{O}}}
+\title{Handout  on Stirling's formula}
+\author{Alessandro Candolini}
+\affiliation{Department of Physics, University Of Trieste, via Valerio~2,
+Trieste, Italy}
+\emailAdd{alessandro.candolini@gmail.com}
+\date{\today}
+\abstract{
+Some proofs of the well-known Stirling's asymptotic approximation of the
+factorial (or the Gamma function) are sketched. No attempt was made at full mathematical rigour, 
+emphasis is mostly on the main ideas behind these proofs. }
+\begin{document}
+\maketitle
+
+%    \tableofcontents
+
+\section{Overview}\label{sec:overview}
+The ``factorial'' $\Factorial{n}$ of a positive integer number $n\in\N$ is defined
+by induction:
+let $\Factorial{0} = 1$ and $\Factorial{n} = n \Factorial{(n-1)}$ for every $n\geq 1$.
+
+Stirling's formula
+is an asymptotic approximation of $\Factorial{n}$ for ``large'' $n$, namely
+\begin{dmath}[label={stirling}]
+   \Factorial{n} \asympt  \sqrt{2\pi} n^{n+ \frac{1}{2}} \exp{-n} 
+   \condition{as
+      $n \rightarrow+\infty$}
+\end{dmath},
+where the symbol $\asympt$ will be used to denote asymptotic equality.
+The rigorous meaning of 
+\cref{eq:stirling} is
+   \begin{dmath*}[compact]
+   \lim_{n\rightarrow +\infty} \frac{\Factorial{n}}{\sqrt{2\pi}
+   n^{n+\frac{1}{2}} \exp{-n}} = 1 
+\end{dmath*}.
+
+Since factorials are among the basic ingredients of combinatorics, Stirling's
+formula is extremely useful in many fields of mathematics, statistics and
+physics to help simplify formul\ae{} involving factorials. For this reason, it
+seems useful to review few of the standard methods to prove it.
+
+The simplest argument leads to an (heuristic) integral approximation of
+$\log*{\Factorial{n}}$ (see \cref{sec:int bounds}). To be precise, the method
+actually returns rigorous lower and upper integral bounds of
+$\log*{\Factorial{n}}$. A (still heuristic)  refinement of  the procedure allows
+to  extract the right dependence on $n$, but the procedure is still heuristic
+and the factor $\sqrt{2\pi}$ is still missing.  In order to fully recover
+\cref{eq:stirling} in a rigorous way, more advanced machinary is needed.
+
+The heuristic result of \cref{sec:int bounds} is used as a guess for the
+rigorous treatment of \cref{sec:Wallis}, based on the famous Wallis formula.
+Wallis formula is a rather technical one however, and it would be useful if it
+were possible to prove Stirling's formula relying on more general tools.
+
+Remember that factorials can be written in terms of the gamma trascendental
+function:
+\begin{dmath}[label={gamma n}, compact]
+   \Factorial{n} = \GammaFunc{n+1} = \Integrate{t^{n} \exp{-t}}{t, 0, +\infty} 
+\condition*{\forall n \in \N}
+\end{dmath},
+where the Euler's integral representation of the Gamma function has been used in
+\cref{eq:gamma n}.  Gamma function provides a generalization of the factorial to
+real and complex numbers. This generalization is unique up to some extra
+conditions.  We will thoroughly study the basic properties of Gamma function and
+how it generalizes factorials in \cref{sec:Gamma}.  The Euler's integral
+representation of the Gamma function in \cref{eq:gamma n} is a good starting
+point to prove \cref{eq:stirling} using more advanced techniques.
+
+A standard approach is that of using the saddle-point asymptotic method on the
+right-hand side of \cref{eq:gamma n} , which leads directly to
+\cref{eq:stirling}.  This approach is outlined in \cref{sec:spm}.  Saddle point
+method is a powerful method to compute the asymptotic behavior of certain
+parametric integrals, and it  is discussed more deeply in \cref{app:saddle}.
+
+A third way to prove \cref{eq:stirling} is given in \cref{sec:Michael}. Only
+basic  tools of calculus courses are needed. This is a recent proof due to
+R.~Michael, which again involves the integral representation \cref{eq:gamma n}.
+
+\section{Naive integral approximation\label{sec:int bounds}}
+
+By definition, the factorial of $n\in\N$ is a product.  For every
+$n\in\N\backslash\{0\}$,  $\Factorial{n}$ can be equivalently written as
+$\Factorial{n} = \prod_{k=1}^{n} k$%
+\footnote{%
+   For every $n\in\N\backslash\{0\}$, this is equivalent to the definition of
+   the factorial by induction given at the beginning of \cref{sec:overview}
+   (proof of the equivalence is by induction). For $n=0$ instead, the formula
+   $\Factorial{n} = \prod_{k=1}^{n} k$  does not work.  
+   The position $\Factorial{0}=1$ is conventional and
+   arbitrary, however it is useful and it is consistent with the relation
+   between factorials and the gamma function (see \cref{sec:Gamma}).
+}.
+Now, the trick to proceed is this: 
+\begin{inparaenum}[(a)]
+\item first of all, turn this product into a sum by taking the logarithm of it,
+   then
+\item approximate this sum with an integral.  
+\end{inparaenum} 
+Let us explain the various steps in detail.
+
+\begin{figure}
+\centering
+\asyinclude[inline=true]{./Asymptote/Integral.asy}
+\caption{%
+   Illustration of the key idea beyond integral method: comparison between sums
+   and integrals.  Since $\log{x} $ is an increasing function of $x$, the
+   integral of $\log{x}$ (graphical meaning: gray area in figure) understimates
+   $\log*{\Factorial{n}}$ (the total area under the rectangles), the (nearly
+   triangular) brown areas above the curve of $\log{x}$ being left out. On the
+   contrary, the integral of $\log{x+1}$ overstimates that sum.  
+   \label{fig:int met}
+}
+\end{figure}
+
+First, for $n\in\N\backslash\{0\}$ take the logarithm of $\Factorial{n}$:
+\begin{dmath}[label={logn!},compact]
+   \log*{\Factorial{n}} = \log{\prod_{k=1}^{n} k }= \sum_{k=1}^{n}
+   \log{k} \condition*{n\in\N\backslash\{0\}}.
+\end{dmath}
+\Cref{eq:logn!}  is an \emph{exact} expression of the logarithm of the factorial.  Now, \emph{approximate} the sum in \cref{eq:logn!} with an integral:
+\begin{dmath}[label={int approx},compact]
+   \log*{\Factorial{n}} = \sum_{k=1}^{n} \log k \approx \Integrate{\log x}{x,1,n}
+\condition*{n\in\N\backslash\{0\}}
+\end{dmath}.
+Graphical interpretation of \cref{eq:logn!} (see \cref{fig:int met}):
+$\sum_{k=1}^{n} \log k$ (area under the rectangles) is approximated by
+$\Integrate{\log x}{x,1,n}$ (whose pictorial meaning is the gray area below the
+curve of $\log x $).
+
+The integral in \cref{eq:int approx} is evaluated 
+by parts as usual,  
+\begin{dmath*}[compact]
+\Integrate{\log x }{x, 1, n}
+= \Big[ x\log x -  x\Big]_{x=1}^{x=n} =  n \log n -
+n+1
+\end{dmath*},
+hence \cref{eq:int approx}  reads
+\begin{dmath}[label={int heuristic}, compact]
+   \log{\Factorial{n}} \approx n \log n - n +1
+\end{dmath}.
+For ``large'' $n$,  $n-1\approx n$ and 
+exponentiating \cref{eq:int heuristic} yields
+\begin{dmath}[frame,compact]
+   \Factorial{n} \approx \exp{n\log n - n } = n^{n} \exp{-n}  
+\end{dmath}.
+At this point however we have no precise control of the kind of approximation
+(\ie, a bound on the error) in
+\cref{eq:int approx}.
+
+Actually, the approximation  \cref{eq:int approx} \emph{under}stimates $\log
+{\Factorial{n}}$, as it 
+should be 
+clear from \cref{fig:int met}: the area under the
+curve of $\log x$ 
+is less than the area under the rectangles, the (brown) areas above
+the curve of $\log x$  being left out. 
+
+\begin{approfondimento}
+   If you don't want to rely on \cref{fig:int met}, it is not difficult to
+   convert the graphical argument into a purely algebraic proof.
+Since $\log x$ is a \emph{monotonically 
+   increasing} function of $x$, then 
+\begin{dmath*}[compact]
+   \Integrate{\log x}{x,k-1,k} < \log k < \Integrate{\log x}{x, k, k+1}
+%   \condition{for every $k\in\N$, $k\geq 2$}
+\end{dmath*},
+for every $k\in\N$, $k\geq 2$.
+Equivalently, by changing variables in the second integral:
+\begin{dmath*}[compact]
+   \Integrate{\log x}{x,k-1,k} < \log k < \Integrate{\log{x+1}}{x, k-1, k}
+\end{dmath*},
+for every $k\in\N$, $k\geq 2$.
+Summing from $k=2$ to $k=n$ yields
+\begin{dmath*}[compact]
+\sum_{k=2}^{n} 
+   \Integrate{\log x}{x,k-1,k}  <
+\underbrace{%
+\sum_{k=2}^{n}\log k
+}_{\mathclap{\left( \sum_{k=1}^{n} \log k\right) - \log 1 %
+      = \sum_{k=1}^{n} \log k = \log {\Factorial{n}}  }  }
+<
+\sum_{k=2}^{n} 
+\Integrate{\log{x+1}}{x, k-1, k}
+\end{dmath*}, 
+and therefore
+\begin{dmath*}[compact]
+   \Integrate{\log x }{x,1,n} < \log {\Factorial{n}} <
+   \Integrate{\log{x+1}}{x,1,n}
+\end{dmath*},
+for every $n\in\N$, $n\geq 2$,
+or if you prefer to include also the case $n=1$
+\begin{dmath*}[compact]
+   \Integrate{\log x }{x,1,n} \leq \log{\Factorial{n}}\leq 
+   \Integrate{\log{x+1}}{x,1,n}
+   \condition{for every $n\in\N \backslash\{0\}$}
+\end{dmath*}.
+Graphical meaning (refer to \cref{fig:int met}):
+the total area of the rectangles
+(\ie, $\log{\Factorial{n}}$) is greater than $\Integrate{\log x}{x,1,n}$
+(\ie, the area below $\log x$)  and less than
+$\Integrate{\log{x+1}}{x,1,n}$ [\ie, the area below $\log {x+1}$].
+This shows that the approximation \cref{eq:int approx} actually gives a
+rigorous \emph{lower} bound of $\log{\Factorial{n}}$.
+\end{approfondimento}
+
+
+
+The approximation can be 
+improved by including the
+contributions coming from the nearly-triangular brown areas left-out above the
+plot of $\log x$ (see \cref{fig:int met}).
+Notice that this is nothing but the usual trapezoid rule to approximate an
+integral.%
+\footnote{Euler-MacLaurin formula gives the error of the trapezoid  approximation.
+ We will come back to this point discussing Stirling asymptotic series.}
+
+The $k$-th left out area can be roughly approximated by the triangular area 
+\begin{dmath*}
+\frac{1}{2} \left[ \log {k+1} - \log k \right ] 
+\end{dmath*}.
+Summing all the contributions yields
+%\begin{equation}\label{eq:int+tsum}
+   \begin{dmath}[label={int+tsum}]
+      \log{\Factorial{n}}\approx \Integrate{ \log x }{t,1, n} + \frac{1}{2} \sum_{k=1}^{n}
+\left[ \log  {k+1} - \log k \right] 
+\end{dmath}.
+The telescopic sum on the right-hand side can be evaluated exactly
+\begin{dmath}
+\sum_{k=1}^{n} \left[ \log {k+1} - \log k \right] = \log n - \log 1 = \log n
+\end{dmath},
+(the rigorous proof is by induction) and
+\begin{dmath}[compact]
+   \log{\Factorial{n}} \approx n \log n - n+1 + \frac{1}{2}\log n 
+\approx  \left( n + \frac{1}{2} \right) \log n -n  
+\end{dmath},
+and by taking the exponential 
+\begin{dmath}[label={int guess exp}]
+   \Factorial{n} \approx n^{n+\frac{1}{2}} \exp{-n} 
+\end{dmath}
+This of course is just an heuristic argument, since at this stage we have no control 
+on the
+kind of approximation occurring in \cref{eq:int+tsum}.
+\Cref{eq:int guess exp} shares the correct dependence on $n$, compared to
+\cref{eq:stirling}, but the factor
+$\sqrt{2\pi}$ is still missing. 
+In the next section we will use this result as  starting point for a
+more rigorous treatment. 
+
+
+\section{Rigorous results from integral method. Wallis formula\label{sec:Wallis}}
+Given the heuristic result \cref{eq:int guess exp},
+define a sequence $(a_{n})_{n\in\N\backslash\{0\}}$ of positive numbers
+\begin{dmath*}
+   a_{n} = \frac{\Factorial{n}}{n^{n+\frac{1}{2}} \exp{-n}}  
+\condition*{\forall n\in\N}
+\end{dmath*}.
+Our goals are:
+\begin{inparaenum}[(a)]
+\item prove that $\lim_{n} a_{n}$ exists;
+\item calculate it.
+\end{inparaenum}
+This will be done in \cref{thm:stirling1}.
+To achieve this,
+we need the following preliminary result.
+\begin{theorem}[Wallis formula]
+   \label{thm:Wallis}
+\begin{dmath}[label={Wallis}]
+   \lim_{n\rightarrow+\infty} \frac{2^{2n} (\Factorial{n})^{2}}{\sqrt{n}
+      \Factorial{(2n)}} = \sqrt{\pi}
+\end{dmath}.
+\end{theorem}
+\begin{proof}
+A elegant proof based on properties of gamma function is given in
+\cref{sec:Gamma}. Here, we give another proof, based only on elementary
+calculus. The drawback of this proof is that 
+it becomes quite long and  a bit tricky.
+
+Consider the sequence of integrals
+\begin{dmath}[label={In}]
+I_{n} = 
+\Integrate{\sin[n]{\vartheta}}{\vartheta, 0, \frac{\pi}{2}} 
+\condition*{\forall n\in\N}
+\end{dmath}.
+Integrals of this form often arise in physics, \eg, algebraic relations of
+non-relativistic quantum
+theory of angular momentum, \ie, spherical harmonics%
+\autocite[See for example][\S~3.6]{Sakurai.Napolitano:2011}.
+We will use those integrals to prove the Wallis formula. 
+First of all, we need an explicit expression for $I_{n}$.
+These integrals can be easily computed by using the beta trascendental function, see
+\cref{sec:Gamma}. Here we will use a naive approach: we will use integration by
+parts to obtain a linear recursive equation for $I_{n}$, which can be solved
+exactly in closed form.  Integration by parts yields
+\begin{dmath*}
+I_{n} = 
+\Integrate{\sin[n]{\vartheta}}{\vartheta, 0, \frac{\pi}{2}} 
+= - \left. \cos{\vartheta} \sin[n-1]{\vartheta} \right|_{0}^{\frac{\pi}{2}} +
+(n-1) \Integrate{ \cos[2]{\vartheta} \sin[n-2]{\vartheta} }{\vartheta, 0, \frac{\pi}{2}}
+= (n-1)  \left( I_{n-2} - I_{n} \right) 
+\end{dmath*}.
+Re-arranging the terms in this expression yields
+\begin{dmath}[label={recursive}]
+   I_{n} = \frac{n-1}{n} I_{n-2}  \condition{$\forall n\in\N$ and $n\geq 2$}
+\end{dmath}.
+\Cref{eq:recursive} is a second-order linear homogeneus recursive equation with
+non-constant (rational)
+coefficients. 
+The initial 
+conditions are
+\begin{dgroup*}
+   \begin{dmath*}[compact]
+      I_{0} = \Integrate{}{\vartheta, 0, \frac{\pi}{2}} = \frac{\pi}{2} 
+   \end{dmath*},
+   \begin{dmath*}[compact]
+I_{1} = \Integrate{\sin \vartheta}{\vartheta, 0, \frac{\pi}{2}} =  \left.
+- \cos \vartheta \right|_{0}^{\frac{\pi}{2}} = 1 
+\end{dmath*}.
+\end{dgroup*}
+One can use the general theory of linear recursive equations with variable
+(polynomial) coefficients to approach
+\cref{eq:recursive} systematically. The fact that the coefficients are not
+constant of course makes the things harder. The general solution of
+\cref{eq:recursive} can be written in terms of gamma function. 
+At a more straightforward level, one can start 
+by calculating explicitly the lowest terms in the sequence $I_{n}$ by using the
+initial conditions,
+sequentially producing the next tems until a clear pattern emerges.
+Once the general patter is identified, one can prove 
+rigorously by induction that
+the pattern is indeed correct. Let us proceed in this way.
+
+For $n$ odd, $n=2k+1$ for some $k\in\N$, the first terms in the recursion are
+\begin{dgroup*}
+   \begin{dmath*}
+I_{3} = \frac{2}{3} I_{1} 
+\end{dmath*},
+\begin{dmath*}[compact]
+I_{5} = \frac{4}{5} I_{3} = \frac{4}{5} \frac{2}{3} I_{1} 
+\end{dmath*},
+\begin{dmath*}[compact]
+I_{7} = \frac{6}{7} I_{5} = \frac{6}{7} \frac{4}{5} \frac{2}{3} I_{1} 
+\end{dmath*},
+\end{dgroup*}
+and it is possible to identify a pattern:
+\begin{dmath}[compact, frame, label={I2k+1}]
+   I_{2k+1} = \frac{\DblFactorial{(2k)}}{\DblFactorial{(2k+1)}} I_{1} =
+   \frac{\DblFactorial{(2k)}}{\DblFactorial{(2k+1)}}
+   \condition*{\forall k \in \N}
+\end{dmath}.
+(Double factorial notation is explained in \cref{sec:Gamma}.)
+The rigorous proof of the relation above is by induction.
+
+For $n$ even, $n = 2k$ for some $k\in\N$, the first terms in the recursion are
+\begin{dgroup*}
+\begin{dmath*}[compact]
+I_{2} = \frac{1}{2} I_{0} 
+\end{dmath*},
+\begin{dmath*}[compact]
+I_{4} = \frac{3}{4} I_{2} = \frac{3}{4} \frac{1}{2} I_{0} 
+\end{dmath*},
+\begin{dmath*}[compact]
+I_{6} = \frac{5}{6} I_{4} = \frac{5}{6} \frac{3}{4} \frac{1}{2} I_{0} 
+\end{dmath*},
+\end{dgroup*}
+and we may expect the general pattern to be 
+\begin{dmath}[compact,frame,label={I2k}]
+   I_{2k} = \frac{\DblFactorial{(2k-1)}} {\DblFactorial{(2k)}} I_{0} =
+   \frac{\DblFactorial{(2k-1)}}{\DblFactorial{(2k)}} \frac{\pi}{2}
+\end{dmath}.
+Also in this case, the rigorous proof can be done by induction.
+
+Now that we have explicit formul\ae{} for $I_{n}$ in \cref{eq:In}, we can ask:
+how are those integrals related to the Wallis formula \cref{eq:Wallis}? How can $I_{n}$ be useful
+to prove \cref{eq:Wallis}? This is a rather technical point: the trick is using
+$I_{n}$ to obtain a chain of inequalities which will allow us to prove \cref{eq:Wallis} by
+invoking the \emph{squeeze theorem}.
+
+First of all, since $0 \leq \sin\vartheta \leq 1 $ for $\vartheta \in
+\interval{0}{\pi/2}$,  we have
+\begin{dmath*}[compact]
+   0 \leq \sin[2k+1]{\vartheta} \leq \sin[2k]{\vartheta} \leq
+   \sin[2k-1]{\vartheta}
+   \condition{$\forall \vartheta\in \interval{0}{\pi/2}$ and $\forall k \in
+      \N\backslash\{0\}$}
+\end{dmath*}
+and for the monotonicity of the integral we have
+\begin{dmath*}[compact]
+0 \leq I_{2k+1} \leq I_{2k} \leq I_{2k-1}  
+\condition*{\forall k \in \N\backslash\{0\}}
+\end{dmath*}.
+Thus,
+\begin{dmath*}[compact]
+0 \leq \frac{(2k)!!}{(2k+1)!!} \leq \frac{(2k-1)!!}{(2k)!!} \frac{\pi}{2} \leq
+\frac{(2k-2)!!}{(2k-1)!!}  
+\condition*{\forall k \in \N\backslash\{0\}}
+\end{dmath*},
+or 
+\begin{dmath*}[compact]
+0 \leq \frac{(2k)!!}{(2k+1)!!} \leq \frac{(2k+1)!!}{(2k)!!} \frac{1}{2k+1} \frac{\pi}{2} \leq
+\frac{(2k)!!}{(2k+1)!!}  \frac{2k+1}{2k} 
+\condition*{\forall k \in \N\backslash\{0\}}
+\end{dmath*}.
+%for every $k\in\N\backslash\{0\}$.
+Since
+\begin{dmath*}[compact]
+   \frac{\DblFactorial{(2k)}}{\DblFactorial{(2k+1)}} = \frac{\left(
+	 \DblFactorial{(2k)}\right)^{2}}{\Factorial{(2k+1)}} = 
+   \frac{
+      \left( 2^{k} \Factorial{k} \right)^{2}}{\Factorial{(2k+1)}} = \frac{2^{2k}
+      (\Factorial{k})^{2}}{\Factorial{(2k)}}
+\frac{1}{2k+1} 
+\end{dmath*},
+we get
+\begin{dmath*}[compact]
+   0 \leq \frac{1}{2k+1} \frac{2^{2k} (\Factorial{k})^{2}}{\Factorial{(2k)}}
+   \leq \frac{\Factorial{(2k)}}{2^{2k}
+      (\Factorial{k})^{2}} \frac{\pi}{2} \leq \frac{2^{2k}
+      (\Factorial{k})^{2}}{\Factorial{(2k)}} \frac{1}{2k} 
+\end{dmath*}.
+Moving things around,
+\begin{dmath*}[compact]
+   0 \leq \frac{k}{2k+1} \left( \frac{2^{2k} (\Factorial{k})^{2}}{\sqrt{k}
+	 \Factorial{(2k)}} \right)^{2}
+   \leq  \frac{\pi}{2} \leq \frac{1}{2}  \left( \frac{2^{2k} (\Factorial{k})^{2}}{\sqrt{k}
+	 \Factorial{(2k)}} \right)^{2} 
+\end{dmath*}.
+It follows that
+\begin{dgroup*}
+   \begin{dmath*}
+      \left( \frac{2^{2k} (\Factorial{k})^{2}}{\sqrt{k} \Factorial{(2k)}}
+      \right)^{2} \leq \frac{2k+1}{k} \frac{\pi}{2}
+   \end{dmath*}
+   \begin{dsuspend}
+   and
+\end{dsuspend}
+   \begin{dmath*}
+      \left( \frac{2^{2k} (\Factorial{k})^{2}}{\sqrt{k} \Factorial{(2k)}} \right)^{2} \geq \pi   
+   \end{dmath*}
+\end{dgroup*}
+Since $\lim_{k\rightarrow+\infty} \frac{2k+1}{k} \frac{\pi}{2}= \pi $, 
+applying squeeze theorem yields
+\begin{dmath*}
+   \lim_{k\rightarrow+\infty} \left( \frac{2^{2k} (\Factorial{k})^{2} }{\sqrt{k}
+	 \Factorial{(2k)}}
+\right)^{2} = \pi 
+\end{dmath*}.
+Taking the square of both sides yields \cref{eq:Wallis}.
+\end{proof}
+%\end{document}
+
+We are ready to prove Stirling formula.
+
+\begin{theorem}[Stirling formula]
+   \label{thm:stirling1}
+   Consider the sequence $(a_{n})_{n\in\N\backslash\{0\}}$ definied by
+   \begin{dmath}[label={an}]
+    a_{n} = \frac{\Factorial{n}}{n^{n+\frac{1}{2}} \exp{-n}}  
+\condition*{\forall n\in\N}
+\end{dmath}.
+Then, 
+\begin{dmath}[label={liman}]
+   \lim_{n\rightarrow +\infty} a_{n} = \sqrt{2\pi}
+\end{dmath}.
+\end{theorem}.
+
+\begin{proof}
+The proof has two steps: 
+\begin{itemize}
+\item 
+   show existence of the limit in \cref{eq:liman}, \ie, prove that there exists a real number $c\in\R$ such that
+\begin{dmath*}
+\lim_{n} \frac{ n!}{n^{n+\frac{1}{2}}\exp{-n}} = c  
+\end{dmath*},
+\item
+   then apply Wallis formula (\cref{thm:Wallis}) to show that $c=\sqrt{2\pi}$. 
+\end{itemize}
+
+To prove the first part, we will show now that the sequence $(\alpha_{n})_{n}$ is decreasing and
+bounded below by a positive constant, thus it converges to some positive real
+number $c$.
+
+Consider  
+\begin{dmath*}
+   \log{\frac{a_{n}}{a_{n+1}}} =  \left( n + \frac{1}{2} \right)  \log{1 +
+      \frac{1}{n}} -1 
+\end{dmath*}.
+Remember the Taylor series of log:
+\begin{dmath*}
+   \log{1+x} = \sum_{k=1}^{+\infty} (-1)^{k-1} \frac{x^{k}}{k} 
+\end{dmath*},
+for $\abs{x}<1$. The first terms are
+\begin{dmath*}
+   \log{1+x}= x - \frac{x^{2}}{2} + \frac{x^{3}}{3} -\frac{x^4}{4}+ \bigO(x^{5}) 
+\end{dmath*}
+Thus
+\begin{dmath*}
+   \log{1 + \frac{1}{n}}= \frac{1}{n} - \frac{1}{2n^{2}} +
+\frac{1}{3n^{3}} -\frac{1}{4n^4} \bigO\left( n^{-5} \right) 
+\end{dmath*},
+and
+\begin{dmath*}
+   \log{\frac{a_{n}}{a_{n+1}}} = 
+   \left( n + \frac{1}{2} \right) \left( \frac{1}{n} -
+\frac{1}{2n^{2}} + \frac{1}{3n^{3}} -\frac{1}{4n^{4}} + \bigO \left( n^{-5} \right) \right) -1 
+= 1 - \frac{1}{2n} + \frac{1}{3n^{2}} + -\frac{1}{4n^3} + \frac{1}{2n} -
+\frac{1}{4n^{2}} +\frac{1}{6n^3} -1 +
+\bigO\left( n^{-4}\right)
+= \frac{1}{3n^{2}} - \frac{1}{4n^{2}} - \frac{1}{4n^3} + \frac{1}{6n^3} +\bigO
+\left( n^{-4} \right) 
+= \frac{1}{12 n^{2}} -\frac{1}{12n^3} + \bigO \left( n^{-4} \right)  
+\end{dmath*}
+This implies $\log{ a_{n} / a_{n+}}>0$ and thus $(a_{n})_{n}$ is a
+\emph{descresing} sequence (at least for
+sufficiently large $n$). 
+
+To prove that $c=\sqrt{2\pi}$, consider the following limit:
+\begin{dmath*}
+\lim_{n} 
+\underbrace{%
+\frac{2^{2n} (n!)^{2}}{\sqrt{n} (2n)!} 
+}_{\rightarrow \sqrt{\pi}}\underbrace{%
+\left(
+\frac{n^{n+\frac{1}{2}}\exp{-n}}{n!} \right)^{2} 
+}_{\rightarrow \frac{1}{c^{2}}}\underbrace{%
+\frac{(2n)!}{(2n)^{2n+\frac{1}{2}}
+\exp{-2n}} 
+}_{\rightarrow c } = \frac{\sqrt{\pi}}{c} 
+\end{dmath*}.
+(Here we have used the theorem of the limit of a product.)
+A direct computation shows that this limit is also equal to
+\begin{dmath*}
+\frac{\sqrt{\pi}}{c} =
+\lim_{n\rightarrow+\infty} \frac{2^{2n}  n^{2 \left( n +\frac{1}{2}
+\right)} \exp{-2n}}{\sqrt{n}  (2n)^{2n+\frac{1}{2} } \exp{-2n}
+} 
+= \lim_{n\rightarrow+\infty} \frac{2^{2n} n^{2n+1}}{n^{\frac{1}{2}}
+(2n)^{2n +\frac{1}{2}}} 
+= \lim_{n\rightarrow+\infty} 2^{2n} \left( \frac{n}{2n} \right)^{2n +
+\frac{1}{2}} 
+= \frac{1}{\sqrt{2}}
+\end{dmath*},
+from which it follows that $ c= \sqrt{2\pi}$.
+\end{proof}
+
+
+\section{Saddle point derivation of Stirling's formula\label{sec:spm}}
+
+This is a standard way (and probably the simplest one) for proving Stirling's formula.
+The method however requires some advanced material:
+\begin{itemize}
+   \item Relation between factorial and gamma function;
+   \item properties of the gamma function (in particular, its integral
+      representation);
+   \item saddle point method.
+\end{itemize}
+The relation between factorial and gamma function and properties of gamma
+function are highlighted in
+\cref{sec:Gamma}.
+The saddle point method is summarized in \cref{sec:saddle}.
+In this section we
+will discuss how this works for the factorial of a natural number (which is rather simple).
+The full application of the method to discuss the asymptotic behavior of the
+gamma function in the complex plane is done in the appendix. 
+
+The foundamental relation between factorials and the Euler's gamma
+function is
+\begin{dmath*}[compact]
+   \Factorial{n} = \GammaFunc{n+1} = \Integrate{ t^{n} \exp{-t}}{t, 0 , +\infty} 
+   \condition*{\forall n \in \N}
+\end{dmath*},
+where we have used the integral representation of the gamma function.
+(See \cref{sec:Gamma} for details.)
+
+Preliminary step: let us write the integrand in a completely equivalent
+fashion:
+\begin{dmath*}[compact]
+   \GammaFunc{n+1} =  
+   \Integrate{\exp{\log{t^{n}}} \exp{-t}}{t, 0, +\infty} =  
+   \Integrate{\exp{n \log{t} - t }}{t, 0, +\infty} 
+\end{dmath*}.
+
+\begin{remark}
+The latter was not a change of variables within the integral. We have just
+used the fact $t^{n}  = \cramped{\exp{\log{t^{n}}}} = \exp{n \log{t}}$.
+\end{remark}
+
+
+In order to understand better what is going on, let us briefly outline the
+behavior of the integrand, which looks as shown in 
+\cref{fig:texp}.
+\begin{figure}
+\centering
+\asyinclude[inline=true]{./Asymptote/texp.asy}
+\caption{Plot of the integrand function $g(t) = t^{n} \exp{-t}$ and its}
+\label{sec:Gamma}
+\end{figure}
+
+Let $\fullfunction{f,g}{\interval[open right]{0}{+\infty}}{\R}$ be
+\begin{dgroup*}
+\begin{dmath*}
+f(t) = n \log t - t 
+\end{dmath*},
+\begin{dmath*}
+   g(t) = \exp{f(t)} 
+\end{dmath*}.
+\end{dgroup*}
+$g$ is integrand function.
+Their   derivatives are respectively
+\begin{dgroup*}
+\begin{dmath*}
+   \D{f(t)}{t} = \frac{n}{t} - 1
+\end{dmath*},
+\begin{dmath*}
+   \D[2]{f(t)}{t} = -\frac{n}{t^{2}} 
+\end{dmath*},
+\begin{dsuspend}
+   and
+\end{dsuspend}
+\begin{dmath*}
+   \D{g(t)}{t} = g(t) \D{f(t)}{t}
+\end{dmath*},
+\begin{dmath*}
+   \D[2]{f(t)}{t} = 
+   \left[ \D[2]{f(t)}{t} + \left( \D{f(t)}{t} \right)^{2} \right] g(t) 
+\end{dmath*}.
+\end{dgroup*}
+Since $g$ never vanishes,
+$\D{g(t)}{t}=0$  if and only if
+$\D{f(t)}{t}$ , \ie, if and only if $t=n$.
+
+
+Since $\D[2]{f(t)}{t} = -\frac{1}{n}<0$ for every $t\in\interval[open
+right]{0}{+\infty}$ and 
+\begin{dmath*}
+   \left( \D[2]{g(t)}{t} \right)_{\mathrlap{t=n}} = \left( \D[2]{f(t)}{t}
+   \right)_{\mathrlap{t=n}}
+   g(n) 
+\end{dmath*},
+the integrand function 
+ has a maximum at $t=n$ with value $g(n) = n^{n}
+\exp{-n}$.
+$\D[2]{g(t)}{t}=0$ if and only if 
+\begin{dmath*}
+- \frac{n}{t^{2}} + \left(  \frac{n}{t} - 1 \right)^{2} = 0 
+\end{dmath*},
+\ie,
+\begin{dmath*}
+t^{2} -2n t + n^{2} - n = 0 
+\end{dmath*}.
+The two solutions of this equation  are $ t_{1,2} = n \pm \sqrt{n}$.
+
+The saddle point recipe is:
+approximate the integrand by Taylor expanding 
+$f$ around  its maximum (which is also a maximum
+of the integrand function itself).
+Notice that we are \emph{not}  using Taylor expansion of the integrand itself, this is
+because the latter  would
+result  in a rather poor approximation if only lower-order terms had to be 
+kept (\eg, second-order Taylor expansion of the integrand itself means that the
+integrand is approximated with a parabola).
+
+\begin{approfondimento}
+Here, we are dealing with integrals with respect to a \emph{real}
+variable. The saddle point method applies more generally to contour integrals in
+ a complex domain. In the latter case, the kind of calculations are more or less
+the same, however there is one big difference: additional work is needed which
+consists of the deformation of the contour of integration. These topics are
+refreshed in \cref{app:saddle}.
+\end{approfondimento}
+
+By Taylor expanding $f(t)$ around $t=n$ we have
+\begin{dmath*}
+   f(t) \approx f(n) + \left( \D{f(t)}{t} \right)_{t=n} (t-n) + \frac{1}{2}
+   \left( \D[2]{f(t)}{t} \right)_{t=n} (t-n)^{2} 
+\end{dmath*},
+and since 
+\begin{dgroup*}
+   \begin{dmath*}
+f(n) = n \log n - n 
+\end{dmath*}
+   \begin{dmath*}
+      \left( \D{f(t)}{t} \right)_{t=n}  = 0 
+   \end{dmath*},
+   \begin{dmath*}[compact]
+      \left( \D[2]{f(t)}{t} \right)_{t=n}  = - \frac{n}{n^{2}} = \frac{1}{n}
+\end{dmath*}
+\end{dgroup*}
+we get
+\begin{dmath*}
+f(t) \approx \left( n \log n - n  \right) -\frac{1}{2n}  (t-n)^{2}  
+\end{dmath*}.
+Thus
+\begin{dmath*}
+   \GammaFunc{n+1} = 
+   \Integrate{ \exp{f(t)}}{t,0,+\infty}
+\approx 
+\Integrate{ \exp{f(n)} \exp{ \frac{1}{2} \left( \D[2]{f(t)}{t} \right)_{t=n}
+      \left( t-n\right)^{2}}}{t,0,+\infty}
+= 
+n^{n} \exp{-n} \Integrate{ \exp{\frac{1}{2n} (t-n)^{2}}}{t,0,+\infty}
+\end{dmath*}.
+For large $n$, we make a very small error by extending the integration to the whole real
+axis, graphically this means that in \cref{fig:texp} the area under the Gaussian tail in the negative half
+plane becomes negligible. The integral becomes a Gaussian integral over the
+whole real line  which is evaluted exactly in closed form:
+\begin{dmath*}[compact]
+\Integrate{\exp{\frac{1}{2n} (t-n)^{2}}}{t,0,+\infty}
+\approx 
+\Integrate{\exp{\frac{1}{2n} (t-n)^{2}}}{t,\R} = 
+\sqrt{2 \pi n} 
+\end{dmath*}.
+\begin{exercise}
+Show that
+\begin{dmath*}
+\int_{0}^{+\infty} 
+\Integrate{\exp{\frac{1}{2n} (t-n)^{2}}}{t,0,+\infty}  = \sqrt{\frac{n
+      \pi}{2}} \left( 1 + \Erf{\sqrt{\frac{n}{2}}} \right) 
+\end{dmath*}
+where the error function has been used.  Give a bound to the error in the approximation
+\begin{dmath*}
+\Integrate{\exp{\frac{1}{2n} (t-n)^{2}}}{t,0,+\infty}
+\approx 
+\Integrate{\exp{\frac{1}{2n} (t-n)^{2}}}{t,\R}
+\sqrt{2 \pi n} 
+\end{dmath*}
+\begin{hint} 
+   The ratio of the two results is $\frac{1}{2} \left( 1 + \Erf{\sqrt{\frac{n}{2}}}
+\right)$. Plot it. For ``large'' $n$ the ratio is $\approx 1$.
+\end{hint}
+\end{exercise}
+
+\section{Stirling series}
+
+Stirling's formula gives indeed the leading term of the following asymptotic
+series, now called the Stirling series:
+
+
+This is not a convergent series.
+However, it is an asymptotic series, in fact there are a number of terms thet
+improve accuracy, after which however accuracy gets worse. This is demonstarted
+in
+
+\section{A modern elementary proof\label{sec:Michael}}
+Only 
+the basic of calculus are required 
+in order to prove two  preliminary  disequalities. No additional machinary is
+needed%
+\autocite[The original paper is][]{Michael:2002}.
+
+%Once again, the starting point is
+%\begin{displaymath}
+%n! = \Gamma(n+1) = \int_{0}^{+\infty} t^{n} \E^{-t} \udiff{t} \eqspace .
+%\end{displaymath}
+%By making the substitution 
+%\begin{displaymath}
+%t = \xi \sqrt{n} + n \eqspace ,
+%\end{displaymath}
+%(the Jacobian of the transformation is $\sqrt{n}$) we get the modified
+%representation
+%\begin{eqnarray*}
+%n! &=& \int_{-\sqrt{n}}^{+\infty} \left( \xi \sqrt{n} + n \right)^{n} \E^{-
+%\left( \xi \sqrt{n} + n \right)} \sqrt{n} \udiff{\xi}  \\
+%&=& n ^{n+\frac{1}{2}} \E^{-n} \int_{-\sqrt{n}}^{+\infty} \left( 1 +
+%\frac{1}{\sqrt{n}} \xi \right)^{n} \E^{- \xi \sqrt{n}} \udiff{\xi} \eqspace .
+%\end{eqnarray*}
+%Now, we have a new goal, namely, to prove that 
+%\begin{displaymath}
+%\int_{-\sqrt{n}}^{+\infty}  \left( 1 + 	\frac{1}{\sqrt{n}}\xi  \right)^{n}
+%\E^{-\xi \sqrt{n}} \udiff{\xi } \rightarrow \sqrt{2\pi}  \eqspace ,
+%\end{displaymath}
+%as $n\rightarrow +\infty$.
+\appendix
+\section{Gamma function warm up}
+\label{sec:Gamma}
+\input{Chapters/Gamma}
+
+\section{Steepest descent method\label{app:saddle}}
+The 
+stepeest descent method (also referred to as saddle point method) is a powerful tool to handle the problem of
+evaluating  the
+  asymptotic behavior (or at least its leading term) of parametric integrals of a certain form.
+For example, it might be useful in evaluating the asymptotic behavior of functions
+ for which a suitable integral representation is available
+ \autocites[An introductory discussion of these topics is given, \eg,
+ by][\S~11]{King.Billingham.ea:2003}[or][\S~6.]{Ablowitz.Fokas:2003}[See
+ also][\S~1]{Zinn-Justin:2002}.
+
+Let us begin with a special case of real integrals over one real variable (this
+is known also as Laplace's method) and then generalize to contour integrals on
+a  complex domain. Generalization to an arbitrary number of variables is not
+covered here, even if such generalizations are often needed in the toolkit of
+every physicists%
+\autocite[Stepeest  descent method  generalizes also to
+functional
+integrations and path integrals, this is very important in dealing with
+non-perturbative corrections in quantum mechanics and quantum field
+theory. Refer to, \eg, ][]{Zinn-Justin:2002}.
+%we restrict to integrals with respect to a
+%\emph{real} variable 
+%(Laplace method). This is enough for example to develop the Stirling's
+%approximation of $\Gamma(x)$ for real values of $x$ as $x\rightarrow+\infty$ and thus deriving the
+%Stirling formula of $n!$.
+%Then we will move to the more general case involving contour integrals in the
+%complex
+%plane. This is the case if you seek for example the asymptotic behavior of  
+%$\Gamma(z)$
+%for complex values of $z$ as $\modul{z} \rightarrow +\infty$.
+%\par
+\subsection{Real case (alias, Laplace method)}
+\subsection{Complex case}
+
+\printbibliography
+\end{document}

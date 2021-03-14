@@ -1,0 +1,705 @@
+The basic properties of Euler's gamma function are refreshed%
+\autocite[For completeness,
+refer to, \eg, the classic book of][]{Magnus.Oberhettinger.ea:1953}.
+
+There is a number of equivalent ways to define the gamma function%
+\autocite[Our exposition follows mostly][\S~4.1]{Freitag.Busam:2005}.
+Here we will discuss:
+\begin{itemize}
+   \item Euler's integral representation together with analytic continuation.
+   \item characterization via the Bohr-Mollerup theorem.
+   \item characterization via Willard theorem.
+\end{itemize}
+
+The gamma function extends the notion of the factorial to real and complex
+numbers. The exact way in which it ``extends'' the factorial is precisely the content of the
+characterizations theorems by Bohr-Mollerup and Willard.
+However, gamma function is extremely useful well beyond the factorials. 
+
+\subsection{Integral representation}
+\label{sec:gamma integral}
+
+\begin{definition}[Gamma function]
+   \label{def:Gamma}
+The gamma function 
+$\GammaFunc{z}$ of a complex number $z$ can be defined by the Euler's integral representation 
+\begin{dmath}[label={Gamma}]
+   \GammaFunc{z} = \Integrate{ t^{z-1} \exp{-t} }{t, 0, +\infty}
+   %\condition{$\forall z\in\C$ such that $\Re z > 0$}
+\end{dmath}
+valid for every $z\in\C$ such that $\Re z > 0$,
+\emph{together with its analytic
+   continuation}.
+\end{definition}
+
+\begin{remark}
+   The definition is \emph{not} \cref{eq:Gamma} alone. It is \cref{eq:Gamma}
+   for $\Re{z} >0$ plus analytic continuation. Both points will be throughly
+   discuss later.
+\end{remark}
+
+%\begin{remark}
+Let us clarify better \cref{eq:Gamma}.
+      By definition of the complex powers,
+      $t^{z-1} \coloneqq \exp{ (z-1) \log{t} }$, where $\log{t}$ is the
+      \emph{real-valued} logarithmic function of the real variable $t$, while
+      the exponential is the complex-valued exponential function.
+      Integration in \cref{eq:Gamma} is over the dummy variable $t$ running over the real interval
+$\interval[open right]{0}{+\infty}$,
+\ie, we are integrating with respect to a \emph{real} (and not a
+complex) variable. 
+
+   In order \cref{def:Gamma} makes sense, we need to prove that 
+\begin{inparaenum}[(a)]
+\item the integral in \cref{eq:Gamma} is convergent if and only if $\Re{z}>0$;
+\item the integral in \cref{eq:Gamma} defines an \emph{holomorphic} function in the half plane 
+   $\Re{z} >0$;
+\item study its analytic continuation for $\Re z \leq 0$.
+\end{inparaenum}
+Let us discuss all these three points.
+
+\begin{lemma}
+
+   $\Integrate{ t^{z-1} \exp{-t}}{t, 0, +\infty}$ is convergent
+   \emph{if and only if} $\Re{z}> 0$.
+\end{lemma}
+\begin{proof}
+   Consider the following integrals:
+   \begin{dgroup*}
+      \begin{dmath}[label={Int1}]
+	 \Integrate{ t^{z-1} \exp{-t}}{t,0,1}
+      \end{dmath}
+      \begin{dmath}[label={Int2}]
+	 \Integrate{ t^{z-1} \exp{-t}}{t,1,+\infty}
+      \end{dmath}
+   \end{dgroup*}
+   We have 
+   \begin{dmath*}
+      \abs{ t^{z-1} \exp{-t}} = t^{\Re{z}-1} \exp{-t}
+   \end{dmath*}.
+   For $t>0$, $\exp{-t} <1$ and 
+   we have 
+   \begin{dmath*}[compact]
+      \Integrate{\abs*{t^{z-1} \exp{-t}}}{t,0,1}
+      =
+      \Integrate{ t^{\Re{z}-1} \exp{-t}}{t,0,1}
+      \leq 
+      \Integrate{ t^{\Re{z}-1} }{t,0,1}
+   \end{dmath*},
+   and the latter (real) integral is convergent if and only if $\Re{z} >0$.
+\end{proof}
+
+\begin{exercise}
+   Show that for every $z\in\C$ such that $\Re{z}>0$, $\Gamma(z)$ can be
+   equivalently written  as
+\begin{dmath*}
+   \Gamma(z) = 2 \Integrate{ \xi^{2z-1} \exp{-\xi^{2}} }{\xi, 0, +\infty}
+\end{dmath*}
+or
+\begin{dmath*}
+\Gamma(z) =  \Integrate{\log[z-1]{\frac{1}{\xi}} }{\xi,0,1} 
+\end{dmath*}
+\begin{hint}
+Apply a suitable change of variables. Why is it possible to performe a change of
+variables?
+\end{hint}
+\end{exercise}
+
+\begin{lemma}
+   $\Integrate{ t^{z-1} \exp{-t}}{t, 0, +\infty}$ defines an
+   \emph{holomorphic} function of $z$ for every $z\in\C$ such that $\Re{z}>0$.
+\end{lemma}
+
+\begin{proof}
+
+   There are two ways to show this:
+   \begin{itemize}
+      \item Direct calculation of 
+	 $\D{}{z}\Integrate{ t^{z-1} \exp{-t}}{t, 0, +\infty}$;
+      \item Application of the Morera's theorem.
+   \end{itemize}
+
+\end{proof}
+
+
+
+
+It can be easily verified that by definition
+\begin{dmath*}[compact]
+   \GammaFunc{1} = \Integrate{ \exp{-t}}{t,0,+\infty} 
+   = \left[ -\exp{-t} \right]_{t=0}^{t=+\infty} = 1
+\end{dmath*}.
+Moreover, by using the standard result of the Gaussian integral, namely%
+\footnote{There are several ways to prove \cref{eq:gaussian}. Refer to, \eg,
+   \cite{Iwasawa:2009,Boros.Moll:2004}.},
+\begin{dmath}[compact,label={gaussian}]
+\Integrate{ \exp{-\xi^{2}} }{t,0,+\infty} = \frac{\sqrt{\pi}}{2}
+\end{dmath},
+we readily obtain
+\begin{dmath}[compact]
+\GammaFunc{\frac{1}{2}} = 
+\Integrate{ t^{-\frac{1}{2}} \exp{-t}}{t,0,+\infty}
+=
+\Integrate{ \frac{1}{\xi}  \exp{-\xi^{2}} 2\xi }{t,0,+\infty}
+=
+ 2
+ \underbrace{\Integrate{ \exp{-\xi^{2}}  }{t,0,+\infty}}_{\sqrt{\pi}/2}
+=  \sqrt{\pi} 
+\condition*{\xi= \sqrt{t}}
+\end{dmath},
+where the factor $2\xi$ in the second integral above comes from the Jacobian of
+the transformation $\xi = \sqrt{t}$. Notice: the original integral is an
+integral however the real line, we are allowed to change variables in this way,
+the square root denotes the real square root.
+
+We will see later that, by using \cref{eq:rec}, the gamma function can be
+simplified for all half-integer arguments.
+
+\subsection{Functional equation}
+\begin{theorem}[recursive relation]
+   \label{thm:rec}
+   For every $z\in \C$, $\Re{z}>0$, 
+\begin{dmath}[label={rec},frame]
+   \GammaFunc{z+1} = z \GammaFunc{z} 
+\end{dmath}.
+\end{theorem}
+\begin{proof}
+   Integrating by parts in \cref{eq:Gamma} yields
+\begin{dmath*} 
+   \GammaFunc{z} = \underbrace{\left. \frac{t^{z}}{z} \exp{-t}
+\right|_{0}^{+\infty}}_{0}  +
+\frac{1}{z} 
+\underbrace{ \Integrate{t^{z} \exp{-t}}{t,0,+\infty}}_{\GammaFunc{z+1} } 
+\end{dmath*}.
+(The first term in the right-hand side vanishes as shown in \cref{ex:rec}.)
+So \cref{eq:rec} holds.
+\end{proof}
+\begin{exercise}
+   \label{ex:rec}
+   In connection with the proof of \cref{thm:rec}, prove that 
+\begin{dmath*}
+\left. \frac{t^{z} \exp{-t}}{z} \right|_{0}^{+\infty}  =
+0 
+\end{dmath*},
+in particular 
+\begin{dmath*}
+\lim_{t\rightarrow +\infty} t^{z} \exp{-t} = 0  
+\end{dmath*}
+for every $z\in\C$. 
+\begin{hint}
+By definition, $t^{z} \exp{-t} \coloneqq \exp{z \log t - t}$. Consider
+\begin{dmath*}[compact]
+\lim_{t\rightarrow+\infty} \abs*{t^{z} \exp{-t}} = 
+\lim_{t\rightarrow+\infty} \abs*{ \exp{ z \log t - t}} =
+\lim_{t\rightarrow+\infty} \abs{ \Re z \log t -t } 
+\end{dmath*};
+show that this limit is zero for every $z\in\C$. This implies also
+$\lim_{t\rightarrow+\infty} t^{z} \exp{-t} =0 $ (why?).
+\end{hint}
+\end{exercise}
+
+
+\Cref{eq:rec} has far-reaching conseguences.
+First of all, \cref{eq:rec} implies that 
+\begin{dmath}[label={gamman+1},frame]
+   \GammaFunc{n+1} = \Factorial{n} 
+\end{dmath}
+for every $n\in\N$.
+Let us prove it by induction.
+First of all, 
+\begin{dmath*}[compact]
+   \GammaFunc{2} = \GammaFunc{1+1} = 1 \GammaFunc{1} = 1 
+\end{dmath*},
+which is equal to $\Factorial{1} =1 $.
+Moreover,  assuming $\GammaFunc{n+1} = \Factorial{n}$ let us prove that 
+$\GammaFunc{n+2} = \Factorial{(n+1)}$:
+\begin{dmath*}[compact]
+   \GammaFunc{(n+1) + 1} = (n+1) \GammaFunc{n+1}  = (n+1) \Factorial{n} =
+   \Factorial{n+1} 
+\end{dmath*}.
+This completes the proof. Notice also that \cref{eq:gamman+1} is consistent
+with the position $\Factorial{0}=1$, in fact
+\begin{dmath*}[compact]
+   \GammaFunc{1} = 1 = \Factorial{0} 
+\end{dmath*}.
+
+As a consequence, the gamma function can be used to extend the notion of
+factorials to the \emph{complex} 
+numbers: $z! \coloneqq\Gamma(z+1)$. 
+
+An even more important conseguence of \cref{eq:rec} is that it can be used
+to implement the \emph{analytic continuation} of $\GammaFunc{z}$ outside the original domain of definition
+of the integral representation \cref{eq:gamma}.
+Let us now discuss better this point.
+
+We know that $\Gamma{z}$ in \cref{eq:gamma} is 
+\begin{inparaenum}[(a)]
+\item analytic for $\Re{z}>0$;
+\item satifies \cref{eq:rec} for $\Re{z}>0$.
+\end{inparaenum}
+Consider 
+\begin{dmath*}
+   \GammaFunc{z} = \frac{\Gamma{z+1}}{z} 
+   \condition*{\Re{z}>0}
+\end{dmath*}.
+$\Gamma{z+1}$ on the right-hand side is indeed defined for $\Re (z+1)
+>0$, \ie, $\Re z >-1$.
+$\GammaFunc{z+1} /z $ thus coincides with the original definition of
+$\GammaFunc{z}$ 
+for $\Re z>0$,  but it is also valid for $-1<\Re z < 0$, allowing the
+analytic continuation 
+of $\Gamma{z}$ to the strip $-1<\Re z <0$.
+
+For example, let us 
+compute $\GammaFunc{-1/2}$.
+We have
+\begin{dmath*}[compact]
+   \GammaFunc{-\frac{1}{2} )} = \frac{\GammaFunc{- \frac{1}{2} +
+	 1}}{-\frac{1}{2}} = -2 \GammaFunc{\frac{1}{2} } = -2 \sqrt{\pi}
+\end{dmath*}.
+
+Repeating the same reasoning, we can further extend the definition  of
+$\GammaFunc{z}$ via analytic continuation to all other points of the half-plane $\Re
+z <0$.
+In this way, 
+\begin{dmath}[label={gamman},frame]
+   \GammaFunc{z} = \frac{\GammaFunc{z+n}}{\Pochhammer{z}{n}}
+   \condition*{\forall n\in\N}
+\end{dmath},
+where $\Pochhammer{z}{n}$
+is the Pockhammer symbol of index $n$.
+\begin{definition}[Pochhammer's symbol]
+   For every $z\in\C$ and $n\in\N$, the Pochhammer's symbol
+   $\Pochhammer{z}{n}$ is defined by induction on $n$:
+   \begin{itemize}
+      \item $\Pochhammer{z}{1}= z$ and 
+      \item $\Pochhammer{z}{n+1} = (z+n) \Pochhammer{z}{n}$  for every $n\geq
+	 1$.
+   \end{itemize}
+  Sometimes it is useful to define also $\Pochhammer{z}{0} =1$.
+\end{definition}
+In other words,
+\begin{dmath*}
+   \Pochhammer{z}{n}= z (z+1) (z+2) \cdots (z+n-1) 
+\end{dmath*}.
+Notice that $\Pochhammer{1}{1} = 1$ and $\Pochhammer{1}{n+1} = (n+1)
+\Pochhammer{1}{n}$, that is  $\Pochhammer{1}{n} = \Factorial{n}$.
+
+\begin{lemma}
+$\GammaFunc{z}$ has simple poles at $z=-n$, with
+$n\in\N$, with residues given by 
+\begin{dmath}
+   \Res{z=-n}{\Gamma(z)} = \lim_{z\rightarrow -n} (z+n) \Gamma(z) =
+\lim_{z\rightarrow -n} (z+n) \frac{\Gamma(z+n+1)}{(z)_{n+1}} =
+\lim_{z\rightarrow -n} \frac{\Gamma(z+n+1)}{(z)_{n}} = 
+\frac{(-1)^{n}}{n!} 
+\end{dmath}.
+\end{lemma}
+\begin{exercise}
+   Prove that $\Pochhammer{-n}{n}= (-1)^{n} \Factorial{n}$.
+\end{exercise}
+
+The plot of $\GammaFunc{z}$ for real values of $z$ is given in
+\cref{fig:gamma_plot}.
+
+\begin{figure}
+   \centering
+\asyinclude[inline=true]{./Asymptote/gamma.asy}
+\caption{Plot of gamma function for real values of its argument}
+\end{figure}
+
+
+\subsection{Double factorial notation}
+One often encounters products of the odd positive integers and products of the
+even positive intergers.
+For convenience, one introduces the following double factorial notation.
+\begin{definition}[Double factorials]
+By
+induction,  define
+$\DblFactorial{0} = \DblFactorial{1} = 1$ and for 
+every $n\in\N$, $n\geq 1$,
+\begin{dgroup*}
+\begin{dmath}[label={dblfactorial2n+1}]
+   \DblFactorial{(2n+1)} = (2n+1) \DblFactorial{(2n-1)} 
+\end{dmath}
+\begin{dsuspend}
+   and
+\end{dsuspend}
+\begin{dmath}[label={dblfactorial2n}]
+   \DblFactorial{(2n)} = (2n) \DblFactorial{(2n-2)} 
+\end{dmath}.
+\end{dgroup*}
+\end{definition}
+In other words,
+\begin{dgroup*}
+   \begin{dmath*}
+      \DblFactorial{(2n+1)} = 1 \times 3 \times 5 \times \cdots \times (2n+1) 
+   \end{dmath*},
+   \begin{dmath*}
+      \DblFactorial{(2n)} = 2 \times 4 \times 6 \times \cdots \times (2n) 
+   \end{dmath*}.
+\end{dgroup*}
+Furthermore, it is useful (see, \eg, the next exercise) to define
+$\DblFactorial{(-1)} =1$.
+\begin{lemma}
+\begin{dgroup*}
+   \begin{dmath}[label={dblfactorial2nclose}]
+      \DblFactorial{(2n)} = 2^{n} \Factorial{n} 
+   \end{dmath},
+   \begin{dmath}[label={dblfactorial2n+1close}]
+      \DblFactorial{ (2n+1)} = \frac{\Factorial{(2n+1)}}{2^{n} \Factorial{n}}
+   \end{dmath}.
+\end{dgroup*}
+\end{lemma}
+\begin{proof}
+   Heuristic argument to prove \cref{eq:dblfactorial2nclose}:
+\begin{dmath*}
+   \DblFactorial{2n}= 2 \times 4 \times 6 \times \cdots \times 2n 
+= (2 \times 1) \times (2\times 2) \times (2\times 3) \times \cdots \times
+(2\times n) 
+= 2^{n} \Factorial{n} 
+\end{dmath*}.
+Rigorous proof of \cref{eq:dblfactorial2nclose} is by induction, as follows.
+Notice however that the rigorous proof by induction gives no help in deriving
+the formula in \cref{eq:dblfactorial2nclose},
+it simply gives a rigorous proof of it once the formula has been already found.
+Proof by induction of \cref{eq:dblfactorial2nclose}:
+$\DblFactorial{0}  = 2^{0} \Factorial{0} = 1$ (so the formula holds for $n=0$) and
+\begin{dmath*}[compact]
+   \DblFactorial{(2n+2)} = (2n+2) \DblFactorial{(2n)} = 
+   (2n+2) 2^{n} \Factorial{n} = 2 (n+1) 2^{n} \Factorial{n} = 2^{n+1}
+   \Factorial{(n+1)}
+\end{dmath*}.
+\Cref{eq:dblfactorial2n+1close} follows  from
+\begin{dmath*}
+   \DblFactorial{(2n+1)} = \frac{\Factorial{(2n+1)}} {\DblFactorial{(2n)}} 
+\end{dmath*}.
+(Again, rigorous proof is by induction.)
+\end{proof}
+
+\begin{lemma}
+   Show that 
+   \begin{dmath*}[compact]
+   \GammaFunc{\frac{1}{2} +n}
+   = \frac{\DblFactorial{(2n-1)}}{2^{n}} \GammaFunc{\frac{1}{2}} 
+   = \frac{\DblFactorial{(2n-1)}}{2^{n}} \sqrt{\pi} 
+   \condition*{\forall n \in \N}
+\end{dmath*}.
+\end{lemma}
+\begin{proof}
+Let us check the formula for some $n$
+\begin{dgroup*}
+   \begin{dmath*}[compact]
+   \GammaFunc{\frac{1}{2} +  1} =  \frac{1}{2} \GammaFunc{\frac{1}{2}}
+\end{dmath*},
+   \begin{dmath*}[compact]
+\Gamma\left(\frac{1}{2} +  2\right) =  \left( \frac{1}{2} + 1\right)
+\GammaFunc{\frac{1}{2} +  2} = \left( \frac{1}{2} +1\right)
+   \GammaFunc{\frac{1}{2}+1}
+   = \frac{3}{2} \frac{1}{2} \GammaFunc{\frac{1}{2}  }  
+\end{dmath*},
+\end{dgroup*}
+etc.
+Rigorous proof is by induction: the formula gives the correct result for the
+case $\GammaFunc{\frac{1}{2} + 1}$ (indeed, even for the case $n=0$ assuming 
+$\DblFactorial{(-1)} =1$ is understood); for $n\geq 1$,
+\begin{dmath*}
+   \GammaFunc{\frac{1}{2} + n + 1 } = 
+   \left( \frac{1}{2} + n \right) \GammaFunc{\frac{1}{2} + n}= 
+   \frac{1 + 2n}{2} \frac{\DblFactorial{(2n-1)}}{2^{n}} \GammaFunc{\frac{1}{2}
+   }  = 
+   \frac{\DblFactorial{(2n+1)}}{2^{n+1}} \GammaFunc{\frac{1}{2}}
+\end{dmath*},
+this completes the proof.
+\end{proof}
+\subsection{Another definition of $\Gamma(z)$ and a proof of Wallis formula}
+Another equivalent way to define $\Gamma(z)$ is through the formula
+\begin{dmath}[label={gammalim}]
+   \GammaFunc{z} = \lim_{n\rightarrow+\infty} \frac{\Factorial{n}}
+   {\Pochhammer{z}{n+1}} n^{z} 
+\end{dmath}.
+
+
+Essentially, the argument goes as follows%
+\autocite[See, \eg, ][\S~1.1]{Magnus.Oberhettinger.ea:1953}.
+ For $n\in\N$ and $\Re z>0$, repeated integration by parts yields
+\begin{dmath*}
+   \Integrate{
+      \left( 1 - \frac{t}{n} \right)^{n} t^{z-1} }{t,0,+\infty}
+  = 
+  \frac{\Factorial{n}}{\Pochhammer{z}{n+1}}n^{z}
+\end{dmath*}.
+(Check as an exercise.)
+In the limit $n\rightarrow+\infty$ the left-hand side above becomes 
+$\Integrate{t^{z-1} \exp{-t}}{t,0,+\infty}$.
+However, care
+is needed in taking this limit.
+
+We can use the equivalent definition above of $\GammaFunc{z}$ to give a short proof of Wallis formula.
+Since we know that 
+\begin{dmath*}[compact]
+   \GammaFunc{-\frac{1}{2} } = -2 \GammaFunc{ \frac{1}{2} } = -2\sqrt{\pi}
+\end{dmath*},
+we can write
+\begin{dmath*}
+   \GammaFunc{- \frac{1}{2} } = \lim_{n\rightarrow+\infty} \frac{\Factorial{n}}{
+      \Pochhammer{\frac{1}{2}}{n+1} } n^{-\frac{1}{2}}  
+\end{dmath*}
+We need to compute explicitly the Pochhammer symbol in this formula:
+\begin{dmath*}
+   \Pochhammer{-\frac{1}{2}}{n+1} = 
+   -\frac{1}{2} \Pochhammer{\frac{1}{2}}{n}
+\end{dmath*}
+and using the double factorial notation we have
+\begin{dmath*}[compact]
+\Pochhammer{\frac{1}{2}}{n} = 
+\frac{\DblFactorial{(2n-1)}}{2^{n}}  = \frac{\DblFactorial{(2n+1)}}{2^{n}
+   (2n+1)} = \frac{\Factorial{(2n+1)}}{2^{2n}\Factorial{n} (2n+1)} = 
+\frac{\Factorial{(2n)}}{2^{2n} \Factorial{n}} 
+\end{dmath*}
+Thus, 
+\begin{dmath*}
+   \GammaFunc{-\frac{1}{2}} = 
+   \lim_{n\rightarrow+\infty}
+   \frac{\Factorial{n}}{\Pochhammer{-\frac{1}{2}}{n+1}}
+n^{-\frac{1}{2}} = \lim_{n\rightarrow+\infty}
+\frac{2^{2n} (\Factorial{n})^{2} }{-\frac{1}{2} \Factorial{(2n)}} n^{-\frac{1}{2}} 
+\end{dmath*},
+from which it follows
+\begin{dmath*}
+   \sqrt{\pi} = \lim_{n\rightarrow+\infty} \frac{2^{2n}
+      (\Factorial{n})^{2}}{\Factorial{(2n)}} n
+^{-\frac{1}{2}} 
+\end{dmath*},
+which is the 
+Wallis formula.
+
+\subsection{Beta function}
+\label{sec:Beta}
+
+The beta function is defined by the integral representation
+\begin{dmath}[label={beta},frame]
+   \Beta{p, q} = \Integrate{t^{p-1} (1-t)^{q-1}}{t,0,1}
+\end{dmath}
+for every pair of complex numbers $(p,q)\in\C^{2}$, such that 
+$\Re p>0$ and $\Re q >0$, and its analytic continuation.
+\begin{exercise}
+Show that the integral representation in \cref{eq:beta} converges for $\Re p
+>0$ and $\Re q >0$.
+\end{exercise}
+
+First of all, notice that 
+\begin{dmath}
+   \Beta{q,p}=  \Beta{p,q}
+   \condition{$\Re{p} > 0$ and $\Re{q} >0$}
+\end{dmath}.
+In fact,
+\begin{dmath*}
+   \Beta{q,p} = 
+\Integrate{ t^{q-1} ( 1-t)^{p-1}}{t,0,1}
+= -
+\Integrate{ (1-\xi)^{q-1} \xi ^{p-1}}{\xi,1,0}
+=
+\Integrate{ (1-\xi)^{q-1} \xi ^{p-1}}{\xi,0,1}
+= \Beta{p,q}
+\condition*{\xi= -t}
+\end{dmath*}.
+
+Now, we prove an important formula.
+\begin{theorem}
+   \begin{dmath}[label={betagamma},frame]
+      \Beta{u, v}= \frac{\GammaFunc{u} \GammaFunc{v}}{\GammaFunc{u+v}} 
+\end{dmath}
+for all $(u,v)\in\C^{2}$, $\Re u >0$, $\Re v >0$.
+\end{theorem}
+\begin{proof}
+Step 1: consider
+\begin{dmath*}
+   \GammaFunc{u} \GammaFunc{v} = 
+   \left(\Integrate{ t^{u-1} \exp{-t}}{t,0,+\infty}\right)
+   \left(\Integrate{ t^{v-1} \exp{-t}}{t,0,+\infty}\right)
+\end{dmath*}.
+Step 2: replace $t = x^{2} $ and $s = y^{2}$, giving
+\begin{dmath*}
+   \GammaFunc{u} \GammaFunc{v} = 4
+   \left(\Integrate{ x^{2u-1} \exp{-x^{2}}}{t,0,+\infty}\right)
+   \left(\Integrate{ y^{2v-1} \exp{-y^{2}}}{t,0,+\infty}\right)
+\end{dmath*}.
+Step 3: Fubini's theorem applies allowing to convert the product of two integrals into one
+double integral in the plane
+\begin{dmath*}
+   \GammaFunc{u} \GammaFunc{v} = 4
+   \Integrate{ 
+      \Integrate{ x^{2u-1} y^{2v-1} \exp{-\left( x^{2} + y^{2}
+	    \right)}}{x,0,+\infty}
+   }
+   {y,0,+\infty}
+\end{dmath*}
+%\int_{0}^{+\infty} \udiff{x} \int_{0}^{+\infty}
+%\udiff{y} x^{2u-1} y^{2v-1} \E^{-\left( x^{2}+y^{2}\right) }
+Step 4: we change variables to polar coordinates in the plane:
+\begin{dmath*}
+   \GammaFunc{u} \GammaFunc{v} = 4 
+   \Integrate{ \Integrate{ \rho^{2u+2v-1} \exp{-\rho^{2}} \cos[2u-1]{\vartheta}
+      \sin[2v-1]{\vartheta}}{\vartheta, 0, \frac{\pi}{2}}}{\rho, 0,+\infty}
+\end{dmath*}.
+Step 5: Fubini's theorem allows to factorize the double integral in polar
+coordinates into the product of two integrals:
+\begin{dmath*}
+   \GammaFunc{u} \GammaFunc{v} = 4 
+%\Gamma(u) \Gamma(v) = 4 \left( \int_{0}^{+\infty} \rho^{2u +2v - 1}
+%\E^{-\rho^{2}} \udiff{\rho} \right) \left( \int_{0}^{\frac{\pi}{2}}
+%\cos^{2u-1} \vartheta \sin^{2v-1} \udiff{\vartheta}  \right)
+%\end{displaeqnarrayymath}
+\left(\Integrate{ \rho^{2u+2v-1} \exp{-\rho^{2}} }{\rho, 0, +\infty}\right)
+\left(\Integrate{ \cos[2u-1]{\vartheta}
+      \sin[2v-1]{\vartheta}}{\vartheta,0,\frac{\pi}{2}} \right)
+\end{dmath*}.
+Step 6:
+integration over $\rho$ returns
+\begin{dmath*}[compact]
+\Integrate{ \rho^{2u+2v-1} \exp{-\rho^{2}} }{\rho, 0, +\infty} = 
+\frac{1}{2}
+\Integrate{ \left( \xi^{\frac{1}{2}} \right)^{2u+2v-1} \exp{-\xi}
+   \xi^{-\frac{1}{2}}  }{\xi, 0, +\infty}
+= 
+\frac{1}{2}
+\Integrate{\xi^{u+v-1} \exp{-\xi}}{\xi, 0, +\infty} 
+= \frac{1}{2} \GammaFunc{u+v} 
+     \condition*{\xi = \rho^{2}}
+\end{dmath*}.
+Step 7: integration over $\vartheta$ can be performed by changing variables: $t
+= \cos[2]{\vartheta}$, thus $\sin[2]{\vartheta} = 1 -t $, the Jacobian is 
+\begin{dmath*}
+   \D{\arccos{\sqrt{t}}}{t} 
+= - \frac{1}{2} (1 -t )^{-\frac{1}{2}} t^{-\frac{1}{2}}
+\end{dmath*}
+so
+\begin{dmath*}[compact]
+\Integrate{ \cos[2u-1]{\vartheta}
+   \sin[2v-1]{\vartheta}}{\vartheta,0,\frac{\pi}{2}}= 
+-\frac{1}{2} \Integrate{ t^{u-\frac{1}{2}}
+   (1-t)^{v-\frac{1}{2}} (1-t)^{-\frac{1}{2}} t^{-\frac{1}{2}} }{t,1,0}
+= \frac{1}{2} \Integrate{t ^{u-1} (1-t)^{v-1} }{t,0,1} = \Beta{u,v}
+\end{dmath*}.
+Thus
+\begin{dmath*}[compact]
+   \GammaFunc{u} \GammaFunc{v} = 4 \frac{1}{2} \GammaFunc{u+v} \frac{1}{2}
+   \Beta{u,v} =
+   \GammaFunc{u+v} \Beta{u,v} 
+\end{dmath*}.
+This completes the proof.
+\end{proof}
+
+We will use the beta function to compute quickly $I_{n}$ in \cref{eq:In} in
+\cref{sec:Wallis}.
+Show that 
+\begin{dmath}[compact,frame]
+   I_{n} =  
+   \Integrate{\sin[n]{\vartheta}}{\vartheta,0, \frac{\pi}{2}} 
+   =  \frac{1}{2}
+   \sqrt{\pi} \frac{ \GammaFunc{\frac{n+1}{2}} }{\GammaFunc{\frac{n}{2}
+	 +1 }}
+\end{dmath}.
+We have
+\begin{dmath*}
+   \Integrate{\sin[n]{\vartheta}}{\vartheta,0, \frac{\pi}{2}}  = 
+   \Integrate{\xi^{n} \left( 1 - \xi^{2}\right)^{-\frac{1}{2}}}{\xi, 0, 1}
+= \frac{1}{2} \Integrate{t^{\frac{n}{2}} \left( 1 - t\right)^{-\frac{1}{2}}
+   t^{-\frac{1}{2}}}{t,0,1} 
+= \frac{1}{2} \Beta {\frac{n-1}{2},\frac{1}{2}}
+\condition{where $\xi = \sin{\vartheta}$ and $t=\xi^{2}$}
+\end{dmath*}.
+Using \cref{eq:betagamma} we have
+\begin{dmath*}[compact]
+   \Integrate{\sin[n]{\vartheta}}{\vartheta,0, \frac{\pi}{2}}  = 
+   \frac{1}{2} \frac{\GammaFunc{\frac{n+1}{2}} \GammaFunc{\frac{1}{2}}}
+   {\GammaFunc{\frac{n+1}{2} + \frac{1}{2} }} = \frac{1}{2}
+\sqrt{\pi} \frac{ \GammaFunc{ \frac{n+1}{2} }}{ \GammaFunc{  \frac{n}{2}
++1 }} 
+\end{dmath*}.
+For $n=2k$,  the formula simplifies to
+\begin{dmath*}
+   I_{2k} = \frac{\sqrt{\pi}}{2} \frac{\GammaFunc{k + \frac{1}{2}}}
+   {\GammaFunc{k+1}} = \frac{\sqrt{\pi}}{2} \frac{ \DblFactorial{(2k-1)}}{2^{k}
+      \Factorial{k} }
+   \sqrt{\pi}  = \frac{\pi}{2} \frac{\DblFactorial{(2k-1)}}{\DblFactorial{(2k)}}
+\end{dmath*},
+while for $n=2k+1$ the formula returns
+\begin{dmath*}
+   I_{2k+1} = \frac{\sqrt{\pi}}{2} \frac{ \GammaFunc{k+1} }{ \GammaFunc{k+1 +
+	 \frac{1}{2}}} = \frac{\sqrt{\pi}}{2} \frac{ \Factorial{k} 2^{k+1}}
+   {\DblFactorial{(2k+1)}}
+   \frac{1}{\sqrt{\pi}} = \frac{\DblFactorial{(2k)}}{\DblFactorial{(2k+1)}} 
+\end{dmath*},
+as per the results of \cref{sec:Wallis}.
+\subsection{Reflection formula}
+In this section we prove the important \emph{reflection} formula using residue
+theory. There are also other ways to prove it, \eg, Weierstrass infinite-product
+definizion of $\GammaFunc{z}$ leads directy to this result.
+\begin{theorem}[reflection formula]
+   \begin{dmath}[label={ref},frame]
+      \GammaFunc{z} \GammaFunc{1-z} = \frac{\pi}{\sin{\pi z} }  
+\end{dmath}.
+\end{theorem}
+\endinput
+\begin{proof}
+We begin with $0< \Re z < 1 $, for which the integral representations are valid,
+then we apply analytic continuation.
+\par
+For Eq.~\eqref{eq:betagamma}, 
+\begin{equation}\label{eq:G(z)G(1-z)}
+\Gamma(z ) \Gamma(1-z) = \Gamma( z +1 -z) \beta(z, 1-z) = \beta(z, 1-z) =
+\int_{0}^{1} t^{z-1} (1-t)^{-z} \udiff{t} \eqspace , 
+\end{equation}
+for $0<\Re z <$.
+The integral can be computed exactly by  contour integration in the complex
+plane.
+\par
+Let $f(w )$ be the complex-valued function of the complex variable
+$w\in\C$ defined by
+\begin{displaymath}
+f(w) = w^{z-1} (w-1)^{-z} \eqspace .
+\end{displaymath}
+\begin{remark}
+$f(w)$ is \emph{not} $w^{z-1} (1-w)^{-z}$.
+\end{remark}
+We choose the branch cuts
+\begin{displaymath}
+0 \leq \arg w < 2\pi \eqspace, \qquad 0 \leq \arg(w-1) < 2\pi \eqspace ,
+\end{displaymath}
+Consider $\oint_{\gamma} f(w) \udiff{w} $ where $\gamma$ is the contour
+consisting in the straight joining the points $w=0$ and $w=1$, with
+indentations at $w=0$ and $w=1$.
+\par
+If the raddi of indentation are made to approach  zero,  the contributions from
+the indentation vanish in that limit, since
+\begin{eqnarray*}
+\lim_{w\rightarrow 0} w f(w) &=& \lim_{w\rightarrow 0 } w^{z} (w-1)^{-z} = 0
+\eqspace ,\\
+\lim_{w\rightarrow 1 } (w-1) f(w) &=& \lim_{w\rightarrow 0 } w^{z-1}
+(w-1)^{-z+1} = 0 \eqspace .
+\end{eqnarray*}
+The residue at infinity is one,  and we get
+\begin{displaymath}
+\int_{0}^{1} t^{z-1} (1-t)^{-z} \left( \E^{-i\pi z} - \E^{i\pi z } \right) \udiff{t} =
+-2\pi i  \eqspace ,
+\end{displaymath}
+hence
+\begin{displaymath}
+\int_{0}^{1} t^{z-1} (1-t)^{-z} \udiff{t} = \frac{-2\pi i }{\E^{-i\pi  z} -
+\E^{i\pi z }} = \frac{\pi}{\sin \pi z } \eqspace .
+\end{displaymath}
+Pluggin into  Eq.~\eqref{eq:G(z)G(1-z)} completes the proof for $0<\Re z < 1$.
+Then, apply analytic continuation.
+\end{proof}
+Setting $z= \frac{1}{2}$ in Eq.~\eqref{eq:G(z)G(1-z)} we obtain
+\begin{displaymath}
+\left[\Gamma\left( \frac{1}{2} \right)\right]^{2} = \frac{\pi}{\sin
+\frac{\pi}{2}} = \pi \eqspace ,
+\end{displaymath}
+and taking the positive square root yields $\Gamma\left( \frac{1}{2}\right) =
+\sqrt{\pi}$, in agreement with the previous result.
+\par
+Eq.~\eqref{eq:ref} shows immediately that $\Gamma(z)$ has no zeros, since
+$\frac{\pi}{\sin \pi z }$ is never equal to zero.

@@ -1,0 +1,367 @@
+% *****************************************************************************
+% 	General commands
+% *****************************************************************************
+
+\PassOptionsToPackage{dvipsnames,svgnames}{xcolor}
+
+% un ambiente ad hoc per le citazioni 
+% (in teoria gia' coperto dal pacchetto quoting)
+
+% [...] ;-) NO replaced by \textelp{} and other feature of cvsquotes package
+%\newcommand{\omissis}{[\dots\negthinspace]}
+
+% Indica a LaTeX la cartella dove sono riposti i file delle immagini
+\graphicspath{{./},{./Asymptote/}, {./Images/}, {./Metapost/}}
+
+% Un ambiente ad hoc per gli approfondimenti (definirlo si, ma magari in altro
+% modo)
+\newenvironment{approfondimento}%
+  {\begin{quoting}\small\ignorespaces}%
+  {\end{quoting}}
+
+% i.e. and e.g.
+% here with thin space (most german convetion), see typography discussion in 
+% http://tex.stackexchange.com/questions/25831/canonical-way-to-typeset-spacing-in-abbreviations
+\providecommand{\ie}{i.\,e.}
+\providecommand{\Ie}{I.\,e.}
+\providecommand{\eg}{e.\,g.}
+\providecommand{\Eg}{E.\,g.} 
+
+% th
+\newcommand{\ordth}{\textsuperscript{th}}
+
+% Cpp 
+\def\cpp{\mbox{C++}}
+
+% *****************************************************************************
+%       Finer typography	
+% *****************************************************************************
+%\usepackage[draft,%
+%hyphenation,lastparline,nosingleletter,homeoarchy,rivers]{impnattypo}
+\usepackage[hyphenation]{impnattypo}
+\usepackage[punct-after=false]{fnpct} 
+\setfnpct{add-punct-marks=:}
+\setfnpct{add-punct-marks=;}
+\usepackage[biblatex=true]{embrac}
+
+\AdaptNoteOpt\footcite\multfootcite
+\AdaptNoteOpt\autocite\multautocite
+
+% *****************************************************************************
+% 	Additional hyperref stuff (to be improved)
+% *****************************************************************************
+\usepackage{hyperref}
+\usepackage{xcolor}
+\definecolor{RoyalBlue}{cmyk}{1, 0.50, 0, 0}
+\definecolor{webbrown}{rgb}{.6,0,0}
+\hypersetup{%
+    colorlinks=true, linktocpage=true, pdfstartpage=1, pdfstartview=FitV,%
+    breaklinks=true, pdfpagemode=UseNone, pageanchor=true, pdfpagemode=UseOutlines,%
+    plainpages=false, bookmarksnumbered, bookmarksopen=true, bookmarksopenlevel=1,%
+    hypertexnames=true, pdfhighlight=/O,%
+    urlcolor=webbrown, linkcolor=RoyalBlue, citecolor=RoyalBlue, pagecolor=RoyalBlue,%
+   hyperfootnotes=true,%
+% uncomment the following line if you want to have black links (e.g., for printing)
+% urlcolor=Black, linkcolor=Black, citecolor=Black, pagecolor=Black,%
+    %pdftitle={},%
+    %pdfauthor={\textcopyright\ \myName},%
+    %pdfsubject={},%
+    %pdfkeywords={},%
+    %pdfcreator={pdfLaTeX},%
+    %pdfproducer={LaTeX con hyperref e ClassicThesis}%
+}
+
+
+\hypersetup{citecolor=webblue}
+
+\newcommand{\mail}[1]{\href{mailto:#1}{\texttt{#1}}}
+
+% *****************************************************************************
+% 	Mathematica Packages
+% *****************************************************************************
+
+% Save accent for wick.sty (eulervm already downloaded)
+\let\oldhat\hat
+\let\oldbar\bar
+
+% A.M.S. standard packages.
+\usepackage{amssymb}
+
+% Numerical sets (amssymb package required).
+\newcommand{\numberset}{\mathbb} 
+\providecommand{\N}{\numberset{N}} 
+\providecommand{\Z}{\numberset{Z}} 
+\providecommand{\Q}{\numberset{Q}} 
+\providecommand{\R}{\numberset{R}} 
+\providecommand{\C}{\numberset{C}} 
+
+% Dirac notation (braket package required).
+\usepackage{braket} 
+%\newcommand{\modul}[1]{\mathinner{\vert#1\vert}} 
+%\newcommand{\Modul}[1]{\left\vert#1\right\vert} 
+%\newcommand{\norm}[1]{\mathinner{\Vert#1\Vert}}
+%\newcommand{\Norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\conj}[1]{#1^{*}} 
+\newcommand{\adj}[1]{#1^{\dagger}}
+
+% Un ambiente per i sistemi.
+\newenvironment{sistema}%
+  {\left\lbrace\begin{array}{@{}l@{}}}%
+  {\end{array}\right.}
+ 
+% Cool package. (Non male per funzioni speciali e spazitura integrali, ma poco
+% customizzabile per integrali multiple)
+\usepackage{cool}
+\makeatletter
+  \Style{ArcTrig=arc}
+  \Style{DSymb={{\operator@font d}}}
+  \Style{DDisplayFunc=inset,DShorten=true}
+  \Style{IntegrateDifferentialDSymb={{\operator@font d}}}
+  \makeatother
+
+
+% Costumizing  
+\newcommand{\nto}[3]{#1 = #2, \ldots, #3}
+\newcommand{\fullfunction}[3]{#1\colon#2\to#3}
+
+% Intervals 
+\usepackage{interval}
+\newcommand{\commutator}[2]{\interval[scaled]{#1}{#2}}
+
+% skmath (for differential forms, numeric sets, improvements of functions)
+%\usepackage[commonsets]{skmath}
+\usepackage{skmath}
+\usepackage{skmath_amends}
+
+% *****************************************************************************
+% 	Cleveref support for breqn
+% *****************************************************************************
+\usepackage{cleveref}
+
+% *****************************************************************************
+% 	Theorem and Definition Environments.
+% *****************************************************************************
+
+\usepackage{amsthm}                       % A.M.S. package for theorems.
+
+\makeatletter
+  \newtheoremstyle{classicdef}%           % Stile tipografico dei teoremi
+  {11pt}%                                 % Spazio che precede l'enunciato
+  {11pt}%                                 % Spazio che segue l'enunciato
+  {}%                                     % Stile del font dell'enunciato
+  {}%                                     % Rientro (se vuoto, nessun rientro;
+  %                                       % \parindent = rientro dei capoversi)
+  {\scshape}%                             % Font dell'intestazione
+  {:}%                                    % Punteggiatura dopo l'intestazione
+  {.5em}%                                 % Spazio che segue l'intestazione:
+  %                                       % " " = normale spazio inter-parola;
+  %                                       % \newline = a capo
+  {}%                                     % Specifica intestazione enunciato
+\makeatother
+
+\theoremstyle{classicdef}
+%\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newtheorem*{homework}{Homework}
+\newtheorem*{hint}{Hint}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\renewcommand{\qedsymbol}{\rule{.5em}{.5em}}
+
+% *****************************************************************************
+% 	Exercise environment 
+% *****************************************************************************
+
+\usepackage{tcolorbox}
+
+% *****************************************************************************
+% 	Tensors 
+% *****************************************************************************
+\usepackage{tensind}
+\tensordelimiter{@}
+
+% *****************************************************************************
+% 	Linear operators for qm / qft
+% *****************************************************************************
+\usepackage{linop}
+
+% *****************************************************************************
+% 	Breqn
+% *****************************************************************************
+\usepackage{mathtools}                    % Add support for cramped,
+					  % mathlap,etc.
+
+% Add support for Euler if loaded					  
+\makeatletter
+\@ifpackageloaded{eulervm}
+{% if the package was loaded
+    \PassOptionsToPackage{euler}{flexisym}
+}
+{%else:
+}
+\makeatother 
+
+\usepackage{flexisym}              % flexisym required by breqn
+\usepackage{breqn}                        % Breqn
+\catcode`\_=8 % for safety
+%\catcode`_=12
+%\catcode`^=12
+					  
+\makeatletter
+\@ifpackageloaded{eulervm}
+{% if the package was loaded
+   \def\eqnumsize{\normalfont \Tf@font}   % Add support to Minion Pro
+}
+{}
+\makeatother
+
+\setkeys{breqn}{labelprefix={eq:}}
+
+% *****************************************************************************
+% 	Feyn support for breqn
+% *****************************************************************************
+\usepackage[noglobalbang]{feyn}
+\makeatletter
+\def\vertexlabel#1#2{
+   \setbox0=\hbox to 0pt{\hss$\scriptstyle #2$\hss}
+   \begingroup
+   \lccode`|=`^
+   \lccode`!=`_
+  \ifcat #1|
+ \endgroup
+    \vbox to 0pt{\vss\box0\nointerlineskip\kern2\feyn@maxis}
+  \else\ifcat #1!
+ \endgroup
+    \vbox to 0pt{\kern\feyn@maxis\nointerlineskip\box0\vss}
+  \else
+ \endgroup
+    \PackageError{feyn}
+      {Bad arguments for \string\vertexlabel}
+      {Usage: \string\vertexlabel^{text} or \string\vertexlabel_{text}}
+ \fi\fi
+  }
+  \makeatother
+
+
+
+% *****************************************************************************
+% 	Cleveref support for breqn
+% *****************************************************************************
+
+\makeatletter
+\renewcommand\set@label[2]{\protected@edef\@currentlabel{#2}
+\cref@constructprefix{equation}{\cref@result}%
+\protected@xdef\cref@currentlabel{%
+[equation][\arabic{equation}][\cref@result]\eq@number}
+  %%% Work in progress... Support for hyperref 
+  \hyper@makecurrent{equation}
+  \Hy@raisedlink{\hyper@anchorstart{\@currentHref}}
+  \Hy@raisedlink{\hyper@anchorend}
+}
+\makeatother
+
+
+% *****************************************************************************
+% 	Wick contraction 
+% *****************************************************************************
+
+\usepackage{wick}% Very powerful, but some troubles with AMSmath accents
+\usepackage{simplewick}% Alternative way to typeset Wick contraction..
+
+% Naive way to save accents inside wick environment (the changes do not effect
+% the behavior of accents outside wick macro)
+
+\def\newhat#1{{\oldhat{#1}}}
+\def\newbar#1{{\oldbar{#1}}}
+
+%\def\WKsep{.5}    
+
+\let\oldwick\wick
+\renewcommand{\wick}[3][o]
+{\begingroup
+\let\hat\newhat
+\let\bar\newbar
+\oldwick[#1]{#2}{#3}
+\endgroup
+}
+
+\let\oldWwick\Wwick
+\renewcommand{\Wwick}[4]
+{\begingroup
+\let\hat\newhat
+\let\bar\newbar
+\oldWwick{#1}{#2}{#3}{#4}
+\endgroup
+}
+
+% *****************************************************************************
+% 	Additional setup and packages
+% *****************************************************************************
+
+\hypersetup{citecolor=webbrown}
+\hypersetup{pdfstartpage=1}
+
+%\usepackage[perpage, symbol*, stable, multiple]{footmisc}	
+%\setlength{\footnotemargin}{.6em}%
+%\usepackage{footnpag}
+\makeatletter
+%      \renewcommand*\thefootnote{\@fnsymbol\c@footnote}%
+\renewcommand\@oddfoot{\hfill-- \thepage\ --\hfill}
+      \makeatother
+\usepackage{footnotebackref}
+
+%\usepackage{nicefrac}
+
+\usepackage{paralist}
+\usepackage{cancel}
+\usepackage{slashed}
+
+% *****************************************************************************
+% 	Asymptote
+% *****************************************************************************
+\usepackage{asymptote}       % Asymptote Graphical Vector Language.
+
+%\begin{asydef}
+%defaultpen(fontsize(10pt));
+%texpreamble("\usepackage[opticals,onlytext]{MinionPro}");
+%texpreamble("\usepackage[small]{eulervm}");
+%texpreamble("\usepackage{nicefrac}");
+%texpreamble("\usepackage{cool}");
+%\end{asydef}
+
+%\renewcommand{\figurename}{Fig.}
+%\renewcommand{\tablename}{TAB.}
+\newcommand*\openquote{\makebox(25,-12){\color{lightgray}\scalebox{5}{``}}}
+\newcommand*\closequote{\makebox(25,-22){\color{lightgray}\scalebox{5}{''}}}
+
+\Crefname{problem}{L'esercizio}{Gli esercizi}%
+\crefname{problem}{l'esercizio}{gli esercizi}%
+
+
+% Rewrite the appendix macro to avoid side effects on footnotes spacing
+
+%\makeatletter
+%\renewcommand*\appendix{\par%
+%  \setcounter{chapter}{0}%
+%  \setcounter{section}{0}%
+%  \gdef\@chapapp{\appendixname}%
+%  \gdef\thechapter{\@Alph\c@chapter}%
+%  %\csname appendixmore\endcsname
+%}
+%\makeatother
+
+\newtcolorbox[auto counter,number within=section]{pabox}[2][]{%
+   colback=red!5!white,colframe=red!75!black,fonttitle=\bfseries,
+   title=Exercise.~\thetcbcounter: #2,#1}
+
+\newtcolorbox[auto counter,number within=section]{paboxx}{%
+   colback=red!5!white,colframe=red!75!black,fonttitle=\bfseries,
+   title=Remark}
+
+
+\usepackage{siunitx}
+
+

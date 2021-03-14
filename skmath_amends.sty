@@ -1,0 +1,103 @@
+% It uses the same versioning of skmath
+\ProvidesExplPackage{skmath_amends}
+    {2017/01/08}{0.4b}{improved math commands}
+\RequirePackage{skmath}
+% Cando's addition: Res for complex analysis residue
+\DeclareDocumentCommand\Res{smm}{%
+   \IfBooleanTF{#1}{
+      \mathchoice
+      {\ensuremath{\operatorname{Res}\displaylimits\c_math_subscript_token{#2}#3}}%
+      {\ensuremath{\operatorname{Res}\c_math_subscript_token{#2}#3}}%
+      {\ensuremath{\operatorname{Res}\c_math_subscript_token{#2}#3}}%
+      {\ensuremath{\operatorname{Res}\c_math_subscript_token{#2}#3}}%
+   }
+   {
+      \mathchoice
+      {\ensuremath
+	 {
+	    \operatorname{Res}\displaylimits\c_math_subscript_token{#2}\left(#3\right)
+	 }
+      }%
+      {
+	 \ensuremath{
+	    \operatorname{Res}\c_math_subscript_token{#2}\left(#3\right)
+	 }
+      }%
+      {
+	 \ensuremath{
+	    \operatorname{Res}\c_math_subscript_token{#2}\left(#3\right)
+	 }
+      }%
+      {
+	 \ensuremath{
+	    \operatorname{Res}\c_math_subscript_token{#2}\left(#3\right)
+	 }
+      }%
+   }
+}
+
+% Cando's addition: allow more general log command
+\RenewDocumentCommand\log{sd<>om}{%
+   \IfBooleanTF{#1}
+   {
+      \IfNoValueTF{#2}
+      {
+	 \IfNoValueTF{#3}
+	 {\ensuremath{\__skmath_log:#4}}
+	 {\ensuremath{\__skmath_log:\c_math_superscript_token{#3}#4}}%
+      }{
+	 \IfNoValueTF{#3}
+	 {\ensuremath{\__skmath_log:\c_math_subscript_token{#2}#4}}%
+	 {\ensuremath{\__skmath_log:\c_math_superscript_token{#3}\c_math_subscript_token{#2}#4}}%
+      }
+   }
+   {
+      \IfNoValueTF{#2}
+      {
+	 \IfNoValueTF{#3}
+	 {\ensuremath{\__skmath_log:\left(#4\right)}}
+	 {\ensuremath{\__skmath_log:\c_math_superscript_token{#3}\left(#4\right)}}%
+      }{
+	 \IfNoValueTF{#3}
+	 {\ensuremath{\__skmath_log:\c_math_subscript_token{#2}\left(#4\right)}}%
+	 {\ensuremath{\__skmath_log:\c_math_superscript_token{#3}\c_math_subscript_token{#2}\left(#4\right)}}%
+      }
+   }
+}
+\RenewDocumentCommand\exp{sm}{\ensuremath{
+      \IfBooleanTF{#1}{
+	 % Modified star behavior
+	 \__skmath_exp:\left(#2\right)
+	 % e\c_math_superscript_token{#2}
+      }{
+	 \mathchoice
+	 {\mathrm{e}\c_math_superscript_token{#2}}
+	 {\mathrm{e}\c_math_superscript_token{#2}}
+	 %{\__skmath_exp:\left(#2\right)}
+	 {\__skmath_exp:\left(#2\right)}
+	 {\__skmath_exp:\left(#2\right)}
+      }
+   }
+}
+\DeclareDocumentCommand\d{om}{
+  \ensuremath{
+     \IfNoValueTF{#1}{
+\ensuremath{\,\__skmath_integral_d: #2%
+                              \peek_meaning_ignore_spaces:NT\d{\!}}}%
+			{%
+			   \ensuremath{\,\__skmath_integral_d:^{#1} #2%
+                              \peek_meaning_ignore_spaces:NT\d{\!}}}%
+			}
+  }
+
+\NewDocumentCommand\HH{}{\ensuremath{\mathbb{H}}}
+\NewDocumentCommand\quaternions{}{\ensuremath{\mathbb{H}}}
+\NewDocumentCommand\OO{}{\ensuremath{\mathbb{O}}}
+\DeclareDocumentCommand\kk{}{\ensuremath{\__skmath_imaginary_unit:n{k}}}
+\DeclareDocumentCommand\ee{}{\ensuremath{\__skmath_imaginary_unit:n{e}}}
+\DeclareDocumentCommand{\conj}{m}{%
+	\ensuremath{#1^{\dagger\mathstrut}}
+}
+\DeclareDocumentCommand\trace{m}{%
+  \ensuremath{\operatorname{Tr}\left(#1\right)}%
+}
