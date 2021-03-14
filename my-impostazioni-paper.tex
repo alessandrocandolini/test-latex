@@ -268,34 +268,7 @@
 % 	Wick contraction 
 % *****************************************************************************
 
-\usepackage{wick}% Very powerful, but some troubles with AMSmath accents
 \usepackage{simplewick}% Alternative way to typeset Wick contraction..
-
-% Naive way to save accents inside wick environment (the changes do not effect
-% the behavior of accents outside wick macro)
-
-\def\newhat#1{{\oldhat{#1}}}
-\def\newbar#1{{\oldbar{#1}}}
-
-%\def\WKsep{.5}    
-
-\let\oldwick\wick
-\renewcommand{\wick}[3][o]
-{\begingroup
-\let\hat\newhat
-\let\bar\newbar
-\oldwick[#1]{#2}{#3}
-\endgroup
-}
-
-\let\oldWwick\Wwick
-\renewcommand{\Wwick}[4]
-{\begingroup
-\let\hat\newhat
-\let\bar\newbar
-\oldWwick{#1}{#2}{#3}{#4}
-\endgroup
-}
 
 % *****************************************************************************
 % 	Additional setup and packages
